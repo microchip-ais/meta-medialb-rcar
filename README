@@ -1,0 +1,25 @@
+This layer adds the MediaLB support to the AGL kernel v4.9/rcar-3.5.8
+
+The layer was used to build the MediaLB test environment based on the
+Kingfisher Board and the master branch of the AGL Source Code (2018-02-01) as
+following:
+
+$ repo init -u https://gerrit.automotivelinux.org/gerrit/AGL/AGL-repo
+$ repo sync
+$ git clone git@github.com:microchip-ais/meta-medialb-rcar.git
+$ source ./meta-agl/scripts/aglsetup.sh -m m3ulcb agl-devel -f
+$ bitbake-layers add-layer ../meta-medialb-rcar
+$ bitbake agl-image-minimal
+
+See also https://wiki.automotivelinux.org/agl-distro/source-code
+
+The layer creates new Device Tree Binary (Image-r8a7796-m3ulcb-kf-mlp.dtb) that
+must be manually copied into the directory /boot of the target rootfs.
+
+See also http://docs.automotivelinux.org/docs/getting_started/en/dev/reference/machines/R-Car-Starter-Kit-gen3.html#prepare-the-sd-card-on-the-host
+
+The bootloader environment variable load_dtb must be changed to point to the
+appropriate dtb as following:
+
+=> setenv load_dtb ext4load mmc 0:1 0x48000000 /boot/Image-r8a7796-m3ulcb-kf-mlp.dtb
+=> saveenv
